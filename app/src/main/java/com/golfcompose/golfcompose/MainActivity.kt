@@ -37,6 +37,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.golfcompose.golfcompose.room.RankScreen
 import com.golfcompose.golfcompose.ui.theme.GolfComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -100,7 +101,7 @@ fun MainScreen(navController: NavController) {
         Column(modifier = Modifier
             .weight(0.3f)
             .fillMaxHeight()) {
-            Text("hello")
+            RankScreen()
         }
 
         Column(
@@ -161,7 +162,7 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
         Column(modifier = Modifier
             .weight(0.3f)
             .fillMaxHeight()) {
-            Text("hello")
+            RankScreen()
         }
 
         Column(

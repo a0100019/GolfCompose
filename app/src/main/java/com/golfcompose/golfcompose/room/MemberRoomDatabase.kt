@@ -1,4 +1,4 @@
-package com.golfcompose.golfcompose
+package com.golfcompose.golfcompose.room
 
 import android.content.Context
 import androidx.room.Database
@@ -21,7 +21,7 @@ abstract class MemberRoomDatabase: RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         MemberRoomDatabase::class.java,
-                        "product_database"
+                        "member_database"
                     ).fallbackToDestructiveMigration()
                         .build()
 

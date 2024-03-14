@@ -1,4 +1,4 @@
-package com.golfcompose.golfcompose
+package com.golfcompose.golfcompose.room
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
