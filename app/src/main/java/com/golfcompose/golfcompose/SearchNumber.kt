@@ -2,9 +2,6 @@ package com.golfcompose.golfcompose.room
 
 
 import android.app.Application
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,27 +40,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import com.golfcompose.golfcompose.NumberPads
 import com.golfcompose.golfcompose.R
-import com.golfcompose.golfcompose.ui.theme.GolfComposeTheme
 
-
-class RoomActivity : ComponentActivity() {
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-
-        super.onCreate(savedInstanceState)
-        setContent {
-            GolfComposeTheme {
-                // A surface container using the 'background' color from the theme
-                RankScreen2()
-            }
-        }
-    }
-}
 
 @Composable
-fun RankScreen() {
+fun RankScreen2() {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -86,7 +68,7 @@ fun RankScreen() {
 }
 
 @Composable
-fun TitleRow(head1: String, head2:String, head3:String, head4:String) {
+fun TitleRow2(head1: String, head2:String, head3:String, head4:String) {
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
@@ -107,7 +89,7 @@ fun TitleRow(head1: String, head2:String, head3:String, head4:String) {
 }
 
 @Composable
-fun MemberRow(rank: String, name: String, totalAttendance: Int) {
+fun MemberRow2(rank: String, name: String, totalAttendance: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -128,7 +110,7 @@ fun MemberRow(rank: String, name: String, totalAttendance: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTextField(
+fun CustomTextField2(
     title: String,
     textState: String,
     onTextChange: (String) -> Unit,
@@ -149,7 +131,7 @@ fun CustomTextField(
 }
 
 @Composable
-fun ScreenSetup(viewModel: MainViewModel) {
+fun ScreenSetup2(viewModel: MainViewModel) {
 
     val allMembers by viewModel.allMembers.observeAsState(listOf())
     val searchResults by viewModel.searchResults.observeAsState(listOf())
@@ -162,7 +144,7 @@ fun ScreenSetup(viewModel: MainViewModel) {
 }
 
 @Composable
-fun RoomScreen(
+fun RoomScreen2(
     allMembers: List<Member>,
     searchResults: List<Member>,
     viewModel: MainViewModel
@@ -179,110 +161,64 @@ fun RoomScreen(
         memberTotalAttendance = text
     }
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        CustomTextField2(
+            title = "Member Number",
+            textState = memberNumber,
+            onTextChange = onNumberTextChange,
+            keyboardType = KeyboardType.Text
+        )
+
+        var number by remember { mutableStateOf("010-") }
+
+        NumberPads(number,
+            onNumberAdded = { addedNumber ->
+                number += addedNumber.toString()
+            },
+            onDeleted = { ->
+                if (number.isNotEmpty()) {
+                    number = number.substring(0, number.length - 1)
+                }
+            },
+            onChecked = { ->
+//                navController.navigate("PersonalScreen/$number")
+            }
+        )
+
+        //추가 버튼
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .padding(10.dp)
         ) {
-            CustomTextField2(
-                title = "Member Number",
-                textState = memberNumber,
-                onTextChange = onNumberTextChange,
-                keyboardType = KeyboardType.Text
-            )
+            Button(
+                onClick = {
 
-            CustomTextField2(
-                title = "Total Attendance",
-                textState = memberTotalAttendance,
-                onTextChange = onTotalAttendanceTextChange,
-                keyboardType = KeyboardType.Number
-            )
-
-            //추가 버튼
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            ) {
-                Button(
-                    onClick = {
-                        if (memberTotalAttendance.isNotEmpty()) {
-                            viewModel.insertMember(
-                                Member(
-                                    memberNumber,
-                                    memberTotalAttendance.toInt()
-                                )
+                        viewModel.insertMember(
+                            Member(
+                                memberNumber
                             )
-                            searching = false
-                        }
-                    }
-                ) {
-                    Text(text = "추가")
-                }
-
-                //찾기 버튼
-                Button(
-                    onClick = {
-                        searching = true
-                        viewModel.findMember(memberNumber)
-                    }
-                ) {
-                    Text("찾기")
-                }
-
-//클리어 버튼
-                Button(
-                    onClick = {
+                        )
                         searching = false
-                        memberNumber = ""
-                        memberTotalAttendance = ""
-                    }
-                ) {
-                    Text("Clear")
+
                 }
-
-//정렬 방식 바꾸기 버튼
-                Button(
-                    onClick = {
-// 정렬 방식 변경
-                        sortByAttendance = !sortByAttendance
-                    }
-                ) {
-                    Text(if (sortByAttendance) "전체 출석" else "이번 달 출석")
-                }
-            }
-
-// 정렬된 리스트 가져오기
-            val sortedList = if (sortByAttendance) {
-                allMembers.sortedByDescending { it.memberTotalAttendance }
-            } else {
-                allMembers.sortedByDescending { it.memberMonthAttendance }
-            }
-
-//내림차순으로 보기
-            LazyColumn(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
             ) {
-                item {
-                    TitleRow2(head1 = "순위", head2 = "닉네임", head3 = "출석 횟수", head4 = "등급")
-                }
+                Text(text = "추가")
+            }
 
-                items(sortedList) { member ->
-                    // sortByAttendance에 따라 출석 횟수를 올바른 속성에 할당
-                    val totalAttendance = if (sortByAttendance) {
-                        member.memberTotalAttendance
-                    } else {
-                        member.memberMonthAttendance
-                    }
-                    MemberRow2(
-                        rank = (sortedList.indexOf(member) + 1).toString(),
-                        name = member.memberName,
-                        totalAttendance = totalAttendance
-                    )
+            //찾기 버튼
+            Button(
+                onClick = {
+                    searching = true
+                    viewModel.findMember(memberNumber)
                 }
+            ) {
+                Text("찾기")
             }
 
 
@@ -290,28 +226,25 @@ fun RoomScreen(
             val list = if (searching) searchResults else allMembers
 
 //검색해서 보기
-//        LazyColumn(
-//            Modifier.fillMaxWidth().padding(10.dp)
-//        ) {
-//            item {
-//                TitleRow(head1 = "순위", head2 = "닉네임", head3 = "전체 출석", head4 = "등급")
-//            }
-//
-//            items(list) { member ->
-//                MemberRow(
-//                    rank = (list.indexOf(member) + 1).toString(),
-//                    name = member.memberName,
-//                    totalAttendance = member.memberTotalAttendance
-//                )
-//            }
-//        }
+            LazyColumn(
+                Modifier.fillMaxWidth().padding(10.dp)
+            ) {
+                item {
+                    TitleRow(head1 = "순위", head2 = "닉네임", head3 = "전체 출석", head4 = "등급")
+                }
+
+                items(list) { member ->
+                    MemberRow(
+                        rank = (list.indexOf(member) + 1).toString(),
+                        name = member.memberName,
+                        totalAttendance = member.memberTotalAttendance
+                    )
+                }
+            }
 
         }
-}
 
-
-class MainViewModelFactory(val application: Application) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MainViewModel(application) as T
     }
+
 }
+

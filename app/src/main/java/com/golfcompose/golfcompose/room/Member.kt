@@ -31,6 +31,9 @@ class Member {
 
     constructor()
 
+    constructor(memberNumber: String) {
+        this.memberNumber = memberNumber
+    }
     constructor(memberNumber: String, memberTotalAttendance: Int) {
         this.memberNumber = memberNumber
         this.memberTotalAttendance = memberTotalAttendance

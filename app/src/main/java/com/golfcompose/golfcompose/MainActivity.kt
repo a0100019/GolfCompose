@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -37,7 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.golfcompose.golfcompose.room.RankScreen
+import com.golfcompose.golfcompose.room.RankScreen2
 import com.golfcompose.golfcompose.ui.theme.GolfComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -101,7 +100,7 @@ fun MainScreen(navController: NavController) {
         Column(modifier = Modifier
             .weight(0.3f)
             .fillMaxHeight()) {
-            RankScreen()
+            RankScreen2()
         }
 
         Column(
@@ -117,8 +116,8 @@ fun MainScreen(navController: NavController) {
                     Text("전화번호를 입력해주세요", fontSize = 30.sp)
                 }
                 Column(modifier = Modifier.weight(0.2f)) {
-                    Text("현재 시각", fontSize = 20.sp)
-                    Text("12시 24분", fontSize = 20.sp)
+                    Text("현재 시각", fontSize = 30.sp)
+                    CurrentTimeText()
                 }
             }
 
@@ -158,11 +157,15 @@ fun NumberPadsPreview() {
 @Composable
 fun PersonalScreen(navController: NavController, number: String = "12345678") {
 
+
+    // 
+
+
     Row {
         Column(modifier = Modifier
             .weight(0.3f)
             .fillMaxHeight()) {
-            RankScreen()
+            RankScreen2()
         }
 
         Column(
@@ -196,7 +199,7 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            "(77113696)",
+                            "$number",
                             fontSize = 20.sp
                         )
                     }
@@ -210,10 +213,8 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                         "현재 시각",
                         fontSize = 30.sp
                     )
-                    Text(
-                        "17시 34분",
-                        fontSize = 30.sp
-                    )
+                    CurrentTimeText()
+
                 }
             }
 
