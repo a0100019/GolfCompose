@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun NumberPads(number: String, onNumberAdded: (Int) -> Unit, onDeleted: () -> Unit, onChecked: () -> Unit) {
+fun NumberPads(onNumberAdded: (Int) -> Unit, onDeleted: () -> Unit, onChecked: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Bottom

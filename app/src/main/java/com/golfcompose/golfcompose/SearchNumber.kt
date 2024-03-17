@@ -3,14 +3,11 @@ package com.golfcompose.golfcompose.room
 
 import android.app.Application
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +15,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material.*
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,15 +33,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.navigation.NavController
 import com.golfcompose.golfcompose.NumberPads
 import com.golfcompose.golfcompose.R
 
 
 @Composable
-fun RankScreen2() {
+fun SearchNumberScreen(navController: NavController) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -62,7 +57,7 @@ fun RankScreen2() {
                             as Application
                 )
             )
-            ScreenSetup2(viewModel)
+            ScreenSetup2(viewModel, navController)
         }
     }
 }
@@ -131,7 +126,7 @@ fun CustomTextField2(
 }
 
 @Composable
-fun ScreenSetup2(viewModel: MainViewModel) {
+fun ScreenSetup2(viewModel: MainViewModel, navController: NavController) {
 
     val allMembers by viewModel.allMembers.observeAsState(listOf())
     val searchResults by viewModel.searchResults.observeAsState(listOf())
@@ -139,7 +134,8 @@ fun ScreenSetup2(viewModel: MainViewModel) {
     RoomScreen2(
         allMembers = allMembers,
         searchResults = searchResults,
-        viewModel = viewModel
+        viewModel = viewModel,
+        navController = navController
     )
 }
 
@@ -147,7 +143,8 @@ fun ScreenSetup2(viewModel: MainViewModel) {
 fun RoomScreen2(
     allMembers: List<Member>,
     searchResults: List<Member>,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    navController: NavController
 ) {
     var memberNumber by remember { mutableStateOf("") }
     var memberTotalAttendance by remember { mutableStateOf("") }
@@ -166,16 +163,16 @@ fun RoomScreen2(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        CustomTextField2(
-            title = "Member Number",
-            textState = memberNumber,
-            onTextChange = onNumberTextChange,
-            keyboardType = KeyboardType.Text
-        )
 
         var number by remember { mutableStateOf("010-") }
 
-        NumberPads(number,
+        Text(
+            text = number,
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            fontSize = 50.sp
+        )
+
+        NumberPads(
             onNumberAdded = { addedNumber ->
                 number += addedNumber.toString()
             },
@@ -185,64 +182,64 @@ fun RoomScreen2(
                 }
             },
             onChecked = { ->
-//                navController.navigate("PersonalScreen/$number")
+                navController.navigate("PersonalScreen/$number")
             }
         )
 
-        //추가 버튼
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-        ) {
-            Button(
-                onClick = {
+//        //추가 버튼
+//        Row(
+//            horizontalArrangement = Arrangement.SpaceEvenly,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(10.dp)
+//        ) {
+//            Button(
+//                onClick = {
+//
+//                        viewModel.insertMember(
+//                            Member(
+//                                number
+//                            )
+//                        )
+//                        searching = false
+//
+//                }
+//            ) {
+//                Text(text = "추가")
+//            }
+//
+//            //찾기 버튼
+//            Button(
+//                onClick = {
+//                    searching = true
+//                    viewModel.findMember(number)
+//                }
+//            ) {
+//                Text("찾기")
+//            }
 
-                        viewModel.insertMember(
-                            Member(
-                                memberNumber
-                            )
-                        )
-                        searching = false
 
-                }
-            ) {
-                Text(text = "추가")
-            }
-
-            //찾기 버튼
-            Button(
-                onClick = {
-                    searching = true
-                    viewModel.findMember(memberNumber)
-                }
-            ) {
-                Text("찾기")
-            }
-
-
-//그냥 모든 리스트
-            val list = if (searching) searchResults else allMembers
+////그냥 모든 리스트
+//            val list = if (searching) searchResults else allMembers
 
 //검색해서 보기
-            LazyColumn(
-                Modifier.fillMaxWidth().padding(10.dp)
-            ) {
-                item {
-                    TitleRow(head1 = "순위", head2 = "닉네임", head3 = "전체 출석", head4 = "등급")
-                }
-
-                items(list) { member ->
-                    MemberRow(
-                        rank = (list.indexOf(member) + 1).toString(),
-                        name = member.memberName,
-                        totalAttendance = member.memberTotalAttendance
-                    )
-                }
-            }
-
-        }
+//            LazyColumn(
+//                Modifier.fillMaxWidth().padding(10.dp)
+//            ) {
+//                item {
+//                    TitleRow(head1 = "순위", head2 = "닉네임", head3 = "전체 출석", head4 = "등급")
+//                }
+//
+//                items(list) { member ->
+//                    MemberRow(
+//                        rank = (list.indexOf(member) + 1).toString(),
+//                        name = member.memberName,
+//                        totalAttendance = member.memberTotalAttendance
+//                    )
+//                }
+//            }
+//
+//        }
 
     }
 

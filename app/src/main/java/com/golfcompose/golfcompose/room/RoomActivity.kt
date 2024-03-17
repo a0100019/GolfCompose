@@ -56,7 +56,7 @@ class RoomActivity : ComponentActivity() {
         setContent {
             GolfComposeTheme {
                 // A surface container using the 'background' color from the theme
-                RankScreen2()
+                RankScreen()
             }
         }
     }
@@ -80,7 +80,7 @@ fun RankScreen() {
                             as Application
                 )
             )
-            ScreenSetup2(viewModel)
+            ScreenSetup(viewModel)
         }
     }
 }
@@ -154,7 +154,7 @@ fun ScreenSetup(viewModel: MainViewModel) {
     val allMembers by viewModel.allMembers.observeAsState(listOf())
     val searchResults by viewModel.searchResults.observeAsState(listOf())
 
-    RoomScreen2(
+    RoomScreen(
         allMembers = allMembers,
         searchResults = searchResults,
         viewModel = viewModel
@@ -184,14 +184,14 @@ fun RoomScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            CustomTextField2(
+            CustomTextField(
                 title = "Member Number",
                 textState = memberNumber,
                 onTextChange = onNumberTextChange,
                 keyboardType = KeyboardType.Text
             )
 
-            CustomTextField2(
+            CustomTextField(
                 title = "Total Attendance",
                 textState = memberTotalAttendance,
                 onTextChange = onTotalAttendanceTextChange,

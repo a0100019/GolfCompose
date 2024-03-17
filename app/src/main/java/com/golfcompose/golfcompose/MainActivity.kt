@@ -36,7 +36,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.golfcompose.golfcompose.room.RankScreen2
+import com.golfcompose.golfcompose.room.RankScreen
+import com.golfcompose.golfcompose.room.SearchNumberScreen
 import com.golfcompose.golfcompose.ui.theme.GolfComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -94,13 +95,13 @@ fun NavigationScreen() {
 
 @Composable
 fun MainScreen(navController: NavController) {
-    var number by remember { mutableStateOf("010-") }
+//    var number by remember { mutableStateOf("010-") }
 
     Row {
         Column(modifier = Modifier
             .weight(0.3f)
             .fillMaxHeight()) {
-            RankScreen2()
+            RankScreen()
         }
 
         Column(
@@ -121,25 +122,7 @@ fun MainScreen(navController: NavController) {
                 }
             }
 
-            Text(
-                text = number,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                fontSize = 50.sp
-            )
-
-            NumberPads(number,
-                onNumberAdded = { addedNumber ->
-                    number += addedNumber.toString()
-                },
-                onDeleted = { ->
-                    if (number.isNotEmpty()) {
-                        number = number.substring(0, number.length - 1)
-                    }
-                },
-                onChecked = { ->
-                    navController.navigate("PersonalScreen/$number")
-                }
-            )
+            SearchNumberScreen(navController = navController)
         }
     }
 }
@@ -157,15 +140,13 @@ fun NumberPadsPreview() {
 @Composable
 fun PersonalScreen(navController: NavController, number: String = "12345678") {
 
-
-    // 
-
+    //
 
     Row {
         Column(modifier = Modifier
             .weight(0.3f)
             .fillMaxHeight()) {
-            RankScreen2()
+            RankScreen()
         }
 
         Column(
