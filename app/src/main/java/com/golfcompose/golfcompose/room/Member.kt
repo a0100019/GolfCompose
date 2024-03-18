@@ -25,9 +25,9 @@ class Member {
 
     @ColumnInfo(name = "memberCoffee")
     var memberCoffee: Int = 0
-//
-//    @ColumnInfo(name = "memberFirstTime")
-//    var memberFirstTime: Date = Date()
+
+    @ColumnInfo(name = "memberFirstTime")
+    var memberFirstTime: Long = Date().time
 
     constructor()
 

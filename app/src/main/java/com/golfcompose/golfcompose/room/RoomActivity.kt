@@ -267,7 +267,7 @@ fun RoomScreen(
                     .padding(10.dp)
             ) {
                 item {
-                    TitleRow2(head1 = "순위", head2 = "닉네임", head3 = "출석 횟수", head4 = "등급")
+                    TitleRow(head1 = "순위", head2 = "닉네임", head3 = "출석 횟수", head4 = "등급")
                 }
 
                 items(sortedList) { member ->
@@ -277,19 +277,19 @@ fun RoomScreen(
                     } else {
                         member.memberMonthAttendance
                     }
-                    MemberRow2(
+                    MemberRow(
                         rank = (sortedList.indexOf(member) + 1).toString(),
-                        name = member.memberName,
+                        name = member.memberNumber,
                         totalAttendance = totalAttendance
                     )
                 }
             }
 
-
-//그냥 모든 리스트
-            val list = if (searching) searchResults else allMembers
-
-//검색해서 보기
+//
+////그냥 모든 리스트
+//            val list = if (searching) searchResults else allMembers
+//
+////검색해서 보기
 //        LazyColumn(
 //            Modifier.fillMaxWidth().padding(10.dp)
 //        ) {
