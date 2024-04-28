@@ -30,8 +30,16 @@ class MemberRepository(private val memberDao: MemberDao) {
     fun findMember(number: String) {
         coroutineScope.launch(Dispatchers.Main) {
             searchResults.value = asyncFind(number).await()
+
         }
     }
+
+    fun updateMemberName(memberNumber: String, newMemberName: String) {
+        coroutineScope.launch(Dispatchers.IO) {
+            memberDao.updateMemberName(memberNumber, newMemberName)
+        }
+    }
+
 
     private fun asyncFind(number: String): Deferred<List<Member>?> =
         coroutineScope.async(Dispatchers.IO) {

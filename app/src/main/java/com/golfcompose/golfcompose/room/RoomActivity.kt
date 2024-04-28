@@ -170,7 +170,7 @@ fun RoomScreen(
     var memberNumber by remember { mutableStateOf("") }
     var memberTotalAttendance by remember { mutableStateOf("") }
     var searching by remember { mutableStateOf(false) }
-    var sortByAttendance by remember { mutableStateOf(false) } // 출석 수를 내림차순으로 정렬할지 여부
+    var sortByAttendance by remember { mutableStateOf(true) } // 출석 수를 내림차순으로 정렬할지 여부
 
     val onNumberTextChange = { text: String ->
         memberNumber = text
@@ -184,63 +184,8 @@ fun RoomScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            CustomTextField(
-                title = "Member Number",
-                textState = memberNumber,
-                onTextChange = onNumberTextChange,
-                keyboardType = KeyboardType.Text
-            )
 
-            CustomTextField(
-                title = "Total Attendance",
-                textState = memberTotalAttendance,
-                onTextChange = onTotalAttendanceTextChange,
-                keyboardType = KeyboardType.Number
-            )
 
-            //추가 버튼
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            ) {
-                Button(
-                    onClick = {
-                        if (memberTotalAttendance.isNotEmpty()) {
-                            viewModel.insertMember(
-                                Member(
-                                    memberNumber,
-                                    memberTotalAttendance.toInt()
-                                )
-                            )
-                            searching = false
-                        }
-                    }
-                ) {
-                    Text(text = "추가")
-                }
-
-                //찾기 버튼
-                Button(
-                    onClick = {
-                        searching = true
-                        viewModel.findMember(memberNumber)
-                    }
-                ) {
-                    Text("찾기")
-                }
-
-//클리어 버튼
-                Button(
-                    onClick = {
-                        searching = false
-                        memberNumber = ""
-                        memberTotalAttendance = ""
-                    }
-                ) {
-                    Text("Clear")
-                }
 
 //정렬 방식 바꾸기 버튼
                 Button(
@@ -251,7 +196,7 @@ fun RoomScreen(
                 ) {
                     Text(if (sortByAttendance) "전체 출석" else "이번 달 출석")
                 }
-            }
+
 
 // 정렬된 리스트 가져오기
             val sortedList = if (sortByAttendance) {
@@ -285,29 +230,10 @@ fun RoomScreen(
                 }
             }
 
-//
-////그냥 모든 리스트
-//            val list = if (searching) searchResults else allMembers
-//
-////검색해서 보기
-//        LazyColumn(
-//            Modifier.fillMaxWidth().padding(10.dp)
-//        ) {
-//            item {
-//                TitleRow(head1 = "순위", head2 = "닉네임", head3 = "전체 출석", head4 = "등급")
-//            }
-//
-//            items(list) { member ->
-//                MemberRow(
-//                    rank = (list.indexOf(member) + 1).toString(),
-//                    name = member.memberName,
-//                    totalAttendance = member.memberTotalAttendance
-//                )
-//            }
-//        }
+            } //Column
 
         }
-}
+
 
 
 class MainViewModelFactory(val application: Application) : ViewModelProvider.Factory {

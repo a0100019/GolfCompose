@@ -30,6 +30,11 @@ class MainViewModel(application: Application) : ViewModel() {
         repository.findMember(number)
     }
 
+    fun updateMemberName(memberNumber: String, newMemberName: String) {
+        repository.updateMemberName(memberNumber, newMemberName)
+    }
+
+
 //    fun deleteMember(name: String) {
 //        repository.deleteMember(name)
 //    }

@@ -2,6 +2,8 @@ package com.golfcompose.golfcompose
 
 
 import android.app.Application
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,6 +49,7 @@ fun SearchNumberScreen(navController: NavController) {
             )
             ScreenSetup2(viewModel, navController)
         }
+
     }
 }
 
@@ -65,6 +68,7 @@ fun ScreenSetup2(viewModel: MainViewModel, navController: NavController) {
     )
 }
 
+//검색용 코드인듯
 @Composable
 fun RoomScreen2(
     allMembers: List<Member>,
@@ -101,22 +105,31 @@ fun RoomScreen2(
                 }
             },
             onChecked = { ->
-                searching = true
-                //findMember 하면 searchResults 값이 알아서 바뀜
-                viewModel.findMember(number)
 
-                val firstResult = searchResults.firstOrNull()
+                if (number.isNotEmpty()) {
 
-                if (firstResult != null) {
-                    //개인화면 이동
-                    navController.navigate("PersonalScreen/$number")
-                } else {
-                    viewModel.insertMember(
-                        Member(
-                            number
+                    //searching = true
+                    //findMember 하면 searchResults 값이 알아서 바뀜
+                    viewModel.findMember(number)
+
+                    val firstResult = searchResults.firstOrNull()
+                    Log.d("search", firstResult.toString())
+
+                    if (firstResult != null) {
+                        Log.d("search", "값이 있음")
+                        //개인화면 이동
+                        navController.navigate("PersonalScreen/$number")
+                    } else {
+                        Log.d("search", "값이 없음")
+                        viewModel.insertMember(
+                            Member(
+                                number
+                            )
                         )
-                    )
+                    }
+
                 }
+
             }
         )
     }
