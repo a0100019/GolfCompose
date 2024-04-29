@@ -113,14 +113,14 @@ fun RoomScreen2(
                     viewModel.findMember(number)
 
                     val firstResult = searchResults.firstOrNull()
-                    Log.d("search", firstResult.toString())
+                    Log.d("SearchNumber", firstResult.toString())
 
                     if (firstResult != null) {
-                        Log.d("search", "값이 있음")
+                        Log.d("SearchNumber", "값이 있음")
                         //개인화면 이동
                         navController.navigate("PersonalScreen/$number")
                     } else {
-                        Log.d("search", "값이 없음")
+                        Log.d("SearchNumber", "값이 없음")
                         viewModel.insertMember(
                             Member(
                                 number
