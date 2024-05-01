@@ -1,6 +1,7 @@
 package com.golfcompose.golfcompose
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -359,7 +360,9 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                             .size(50.dp, 70.dp)
                             .weight(0.2f)
                             .align(Alignment.Bottom),
-                        onClick = { navController.popBackStack() }
+                        onClick = {
+                            Log.d("SearchNumber", "값이 있음2 ${firstResult?.memberNumber}")
+                            navController.popBackStack() }
                     ) {
                         Text("확인", fontSize = 30.sp)
                     }

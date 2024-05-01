@@ -116,9 +116,9 @@ fun RoomScreen2(
                     Log.d("SearchNumber", firstResult.toString())
 
                     if (firstResult != null) {
-                        Log.d("SearchNumber", "값이 있음")
+                        Log.d("SearchNumber", "값이 있음 ${firstResult.memberNumber}")
                         //개인화면 이동
-                        navController.navigate("PersonalScreen/$number")
+                        navController.navigate("PersonalScreen/${firstResult.memberNumber}")
                     } else {
                         Log.d("SearchNumber", "값이 없음")
                         viewModel.insertMember(
