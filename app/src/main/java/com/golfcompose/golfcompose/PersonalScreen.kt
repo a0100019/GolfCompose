@@ -1,6 +1,7 @@
 package com.golfcompose.golfcompose
 
 import android.app.Application
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,24 +29,18 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.golfcompose.golfcompose.room.MainViewModel
 import com.golfcompose.golfcompose.room.MainViewModelFactory
 import com.golfcompose.golfcompose.room.RankScreen
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 //개인화면
@@ -54,7 +49,9 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
 
     val owner = LocalViewModelStoreOwner.current
 // 다이얼로그 표시 여부를 제어하기 위한 상태 변수
-    var showDialog by remember { mutableStateOf(false) }
+    var showNameDialog by remember { mutableStateOf(false) }
+    var showCoffeeDialog by remember { mutableStateOf(false) }
+
 
     owner?.let {
         val viewModel: MainViewModel = viewModel(
@@ -65,18 +62,6 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                         as Application
             )
         )
-
-        // 다이얼로그 표시
-        UpdateNameDialog(
-            showDialog = showDialog,
-            onDismiss = { showDialog = false }, // 다이얼로그가 닫힐 때 showDialog 값을 변경하여 다이얼로그를 닫음
-            onConfirm = { newName ->
-                // 여기서 새 이름으로 업데이트 작업 수행
-                viewModel.updateMemberName(number, newName)
-                showDialog = false // 다이얼로그가 닫힘
-            }
-        )
-
 
         // 사용자 정보 받아오기
         val searchResults by viewModel.searchResults.observeAsState(listOf())
@@ -94,6 +79,33 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
         // findMember 함수 호출
         viewModel.findMember(number)
         val firstResult = searchResults.firstOrNull()
+
+        // 다이얼로그 표시
+        UpdateNameDialog(
+            showDialog = showNameDialog,
+            onDismiss = { showNameDialog = false }, // 다이얼로그가 닫힐 때 showDialog 값을 변경하여 다이얼로그를 닫음
+            onConfirm = { newName ->
+                // 여기서 새 이름으로 업데이트 작업 수행
+                viewModel.updateMemberName(number, newName)
+                showNameDialog = false // 다이얼로그가 닫힘
+            }
+        )
+
+        UpdateCoffeeDialog(
+            showDialog = showCoffeeDialog,
+            onDismiss = { showCoffeeDialog = false }, // 다이얼로그가 닫힐 때 showDialog 값을 변경하여 다이얼로그를 닫음
+            onConfirm = { CoffeeAmount ->
+                // 여기서 새 이름으로 업데이트 작업 수행
+                if (CoffeeAmount > 0) {
+                    viewModel.updateMemberCoffee(number, CoffeeAmount - 1)
+                }
+                showNameDialog = false // 다이얼로그가 닫힘
+            },
+            coffeeAmount = firstResult?.memberCoffee ?: 0
+        )
+
+
+
 
         Row {
             Column(modifier = Modifier
@@ -143,7 +155,7 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                         }
                         // 다이얼로그 표시 여부를 변경하는 버튼
                         Button(
-                            onClick = { showDialog = true }
+                            onClick = { showNameDialog = true }
 
                         ) {
                             Text("이름 변경")
@@ -311,7 +323,9 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                                     painter = painterResource(id = R.drawable.baseline_golf_course_24),
                                     contentDescription = "PersonalIcon",
                                     tint = Color.Green, // Tint color for the icon
-                                    modifier = Modifier.size(50.dp) // Size of the icon
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .clickable { showCoffeeDialog = true }
                                 )
                                 Text("커피 교환권", fontSize = 20.sp)
                             }
@@ -330,7 +344,7 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                                     painter = painterResource(id = R.drawable.baseline_golf_course_24),
                                     contentDescription = "PersonalIcon",
                                     tint = Color.Green, // Tint color for the icon
-                                    modifier = Modifier.size(50.dp) // Size of the icon
+                                    modifier = Modifier.size(50.dp)
                                 )
                                 Text("커피 교환권", fontSize = 20.sp)
                             }
@@ -422,6 +436,56 @@ fun UpdateNameDialog(
                             onClick = {
                                 onDismiss()
                                 onConfirm(newName)
+                            }
+                        ) {
+                            Text("확인")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+//커피 개수 변경 다이얼로그
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UpdateCoffeeDialog(
+    showDialog: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit,
+    coffeeAmount: Int
+) {
+    if (showDialog) {
+        Dialog(onDismissRequest = onDismiss) {
+
+            Surface(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(text = "커피 교환권을 사용하시겠습니까?")
+                    Text(text = "$coffeeAmount -> ${coffeeAmount - 1}")
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Button(
+                            onClick = {
+                                onDismiss()
+                            }
+                        ) {
+                            Text("취소")
+                        }
+
+                        Button(
+                            onClick = {
+                                onDismiss()
+                                onConfirm(coffeeAmount)
                             }
                         ) {
                             Text("확인")

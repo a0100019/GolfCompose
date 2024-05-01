@@ -40,6 +40,13 @@ class MemberRepository(private val memberDao: MemberDao) {
         }
     }
 
+    fun updateMemberCoffee(memberNumber: String, newMemberCoffee: Int) {
+        coroutineScope.launch(Dispatchers.IO) {
+            memberDao.updateMemberCoffee(memberNumber, newMemberCoffee)
+        }
+    }
+
+
 
     private fun asyncFind(number: String): Deferred<List<Member>?> =
         coroutineScope.async(Dispatchers.IO) {

@@ -22,6 +22,9 @@ interface MemberDao {
     @Query("UPDATE members SET memberName = :newName WHERE memberNumber = :memberNumber")
     fun updateMemberName(memberNumber: String, newName: String)
 
+    @Query("UPDATE members SET memberCoffee = :newMemberCoffee WHERE memberNumber = :memberNumber")
+    fun updateMemberCoffee(memberNumber: String, newMemberCoffee: Int)
+
     @Query("SELECT * FROM members")
     fun getAllProducts(): LiveData<List<Member>>
 
