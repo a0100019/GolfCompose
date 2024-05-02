@@ -281,30 +281,37 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                         }
                     }
 
-                    Column(
-                        modifier = Modifier.weight(0.4f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "추가 이벤트",
-                            fontSize = 30.sp,
-                        )
-                        Text(
-                            text = "출석 10회마다 커피 교환권을 드립니다.",
-                            fontSize = 15.sp
-                        )
-                        if (firstResult != null) {
+                    Box(modifier = Modifier.weight(0.4f)  ) {
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.align(Alignment.TopCenter)
+                        ) {
                             Text(
-                                text = if(firstResult.memberTotalAttendance%10 == 0) {
-                                    "커피 획득!"
-                                } else {
-                                    (firstResult.memberTotalAttendance%10).toString() + "/10"
-                                       },
-                                fontSize = 50.sp
+                                text = "추가 이벤트",
+                                fontSize = 30.sp,
                             )
-                        } else {
-                            Text("??")
+                            Text(
+                                text = "출석 10회마다 커피 교환권을 드립니다.",
+                                fontSize = 15.sp
+                            )
+                            if (firstResult != null) {
+                                if(firstResult.memberTotalAttendance%10 == 0) {
+                                        Text(text = "커피 획득!", fontSize = 50.sp)
+                                } else {
+                                    Text(text = "${(firstResult.memberTotalAttendance%10)} / 10", fontSize = 50.sp)
+                                }
+                            } else {
+                                Text("??")
+                            }
                         }
+
+                        if (firstResult != null) {
+                            if(firstResult.memberTotalAttendance%10 == 0) {
+                                MyLottieAnimation(modifier = Modifier.align(Alignment.Center))
+                            }
+                        }
+
                     }
 
                 }

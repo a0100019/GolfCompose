@@ -82,5 +82,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+    //로티파일
+    implementation ("com.airbnb.android:lottie-compose:6.4.0")
+
 
 }
