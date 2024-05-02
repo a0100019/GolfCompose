@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -98,6 +100,10 @@ fun RoomScreen2(
         NumberPads(
             onNumberAdded = { addedNumber ->
                 number += addedNumber.toString()
+                if(number.length == 2) {
+                    viewModel.findMember(number)
+                }
+
             },
             onDeleted = { ->
                 if (number.isNotEmpty()) {
@@ -110,7 +116,8 @@ fun RoomScreen2(
 
                     //searching = true
                     //findMember 하면 searchResults 값이 알아서 바뀜
-                    viewModel.findMember(number)
+
+//                    viewModel.findMember(number)
 
                     val firstResult = searchResults.firstOrNull()
                     Log.d("SearchNumber", firstResult.toString())
@@ -118,20 +125,25 @@ fun RoomScreen2(
                     if (firstResult != null) {
                         Log.d("SearchNumber", "값이 있음 ${firstResult.memberNumber}")
                         //개인화면 이동
-                        navController.navigate("PersonalScreen/${firstResult.memberNumber}")
+                        navController.navigate("PersonalScreen/$number")
                     } else {
+
                         Log.d("SearchNumber", "값이 없음")
                         viewModel.insertMember(
                             Member(
                                 number
                             )
                         )
+                        navController.navigate("PersonalScreen/$number")
                     }
+
+
 
                 }
 
             }
         )
+
     }
 }
 

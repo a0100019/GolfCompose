@@ -34,9 +34,22 @@ class MainViewModel(application: Application) : ViewModel() {
         repository.updateMemberName(memberNumber, newMemberName)
     }
 
+    fun updateMemberTotalAttendance(memberNumber: String, newMemberTotalAttendance: Int) {
+        repository.updateMemberTotalAttendance(memberNumber, newMemberTotalAttendance)
+    }
+
+    fun updateMemberMonthAttendance(memberNumber: String, newMemberMonthAttendance: Int) {
+        repository.updateMemberMonthAttendance(memberNumber, newMemberMonthAttendance)
+    }
+
     fun updateMemberCoffee(memberNumber: String, newMemberCoffee: Int) {
         repository.updateMemberCoffee(memberNumber, newMemberCoffee)
     }
+
+    fun updateMemberFirstTime(memberNumber: String, newMemberFirstTime: Long) {
+        repository.updateMemberFirstTime(memberNumber, newMemberFirstTime)
+    }
+
 
 
 //    fun deleteMember(name: String) {

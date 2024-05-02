@@ -40,9 +40,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Dialog
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Date
 
 //개인화면
 @Composable
@@ -76,10 +78,42 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
         val totalIndex = sortedTotalResults.indexOfFirst { it.memberNumber == number }
         val monthIndex = sortedMonthResults.indexOfFirst { it.memberNumber == number }
 
-
         // findMember 함수 호출
         viewModel.findMember(number)
         val firstResult = searchResults.firstOrNull()
+//        Log.d("SearchNumber", "값이 있음2 ${firstResult?.memberNumber}")
+
+        //첫 로그인 확인 함수
+        firstResult?.let { it1 ->
+            val memberFirstTime = it1.memberFirstTime
+            // 현재 날짜 가져오기
+            val currentDate = LocalDate.now()
+
+            // firstResult.memberFirstTime의 시간을 LocalDate로 변환
+            val memberFirstDate = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(memberFirstTime),
+                ZoneId.systemDefault()
+            ).toLocalDate()
+
+            // 현재 날짜와 memberFirstDate를 비교하여 날짜가 다른지 확인
+            val dateDifference = currentDate.compareTo(memberFirstDate)
+
+            if (dateDifference != 0) {
+                // 날짜가 다른 경우에만 이 코드 블록이 실행됩니다.
+                // 여기에 원하는 작업을 추가하세요.
+                Log.d("SearchNumber", "날짜 다름")
+                if(firstResult.memberTotalAttendance % 10 == 9) {
+                    viewModel.updateMemberCoffee(number, firstResult.memberCoffee + 1)
+                }
+                viewModel.updateMemberTotalAttendance(number, firstResult.memberTotalAttendance + 1)
+                viewModel.updateMemberMonthAttendance(number, firstResult.memberMonthAttendance + 1)
+                viewModel.updateMemberFirstTime(number, Date().time)
+            } else {
+                // 날짜가 같은 경우에는 아무 작업도 수행하지 않습니다.
+            }
+        }
+
+
 
         // 다이얼로그 표시
         UpdateNameDialog(
@@ -104,9 +138,6 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
             },
             coffeeAmount = firstResult?.memberCoffee ?: 0
         )
-
-
-
 
         Row {
             Column(modifier = Modifier
@@ -361,7 +392,7 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                             .weight(0.2f)
                             .align(Alignment.Bottom),
                         onClick = {
-                            Log.d("SearchNumber", "값이 있음2 ${firstResult?.memberNumber}")
+                            Log.d("SearchNumber", "값이 있음3 ${firstResult?.memberNumber}")
                             navController.popBackStack() }
                     ) {
                         Text("확인", fontSize = 30.sp)

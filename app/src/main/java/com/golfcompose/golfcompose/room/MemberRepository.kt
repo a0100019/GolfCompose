@@ -40,12 +40,29 @@ class MemberRepository(private val memberDao: MemberDao) {
         }
     }
 
+    fun updateMemberTotalAttendance(memberNumber: String, newMemberTotalAttendance: Int) {
+        coroutineScope.launch(Dispatchers.IO) {
+            memberDao.updateMemberTotalAttendance(memberNumber, newMemberTotalAttendance)
+        }
+    }
+
+    fun updateMemberMonthAttendance(memberNumber: String, newMemberMonthAttendance: Int) {
+        coroutineScope.launch(Dispatchers.IO) {
+            memberDao.updateMemberMonthAttendance(memberNumber, newMemberMonthAttendance)
+        }
+    }
+
     fun updateMemberCoffee(memberNumber: String, newMemberCoffee: Int) {
         coroutineScope.launch(Dispatchers.IO) {
             memberDao.updateMemberCoffee(memberNumber, newMemberCoffee)
         }
     }
 
+    fun updateMemberFirstTime(memberNumber: String, newFirstTime: Long) {
+        coroutineScope.launch(Dispatchers.IO) {
+            memberDao.updateMemberFirstTime(memberNumber, newFirstTime)
+        }
+    }
 
 
     private fun asyncFind(number: String): Deferred<List<Member>?> =
