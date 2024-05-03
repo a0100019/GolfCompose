@@ -7,6 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieClipSpec
@@ -16,9 +17,9 @@ import com.airbnb.lottie.compose.rememberLottieAnimatable
 import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
-fun MyLottieAnimation(modifier: Modifier) {
+fun Lottie(rawResId: Int, modifier: Modifier) {
     val composition by rememberLottieComposition(
-        LottieCompositionSpec.RawRes(R.raw.congratulations)
+        LottieCompositionSpec.RawRes(rawResId)
     )
     val lottieAnimatable = rememberLottieAnimatable()
 
@@ -32,7 +33,7 @@ fun MyLottieAnimation(modifier: Modifier) {
     }
 
     Box(
-        modifier = modifier.size(400.dp, 170.dp)
+        modifier = modifier
     ) {
         LottieAnimation(
             composition = composition,
@@ -40,4 +41,10 @@ fun MyLottieAnimation(modifier: Modifier) {
             contentScale = ContentScale.Inside,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LottieFilesPreview() {
+    Lottie(R.raw.heart, modifier = Modifier.size(500.dp, 500.dp))
 }

@@ -2,11 +2,13 @@ package com.golfcompose.golfcompose.room
 
 
 import android.app.Application
+import android.graphics.Paint.Align
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import com.golfcompose.golfcompose.GradeImageId
 import com.golfcompose.golfcompose.R
 import com.golfcompose.golfcompose.ui.theme.GolfComposeTheme
 
@@ -94,35 +97,41 @@ fun TitleRow(head1: String, head2:String, head3:String, head4:String) {
             .padding(5.dp)
     ) {
         Text(head1,
+            fontSize = 25.sp,
             modifier = Modifier
                 .weight(0.1f))
         Text(head2,
+            fontSize = 25.sp,
             modifier = Modifier
                 .weight(0.2f))
         Text(head3,
+            fontSize = 25.sp,
             modifier = Modifier.weight(0.2f))
         Text(head4,
+            fontSize = 25.sp,
             modifier = Modifier.weight(0.1f))
     }
 }
 
 @Composable
-fun MemberRow(rank: String, name: String, totalAttendance: Int) {
+fun MemberRow(rank: String, name: String, Attendance: Int) {
     Row(
-        modifier = Modifier
+        verticalAlignment = Alignment.CenterVertically
+        ,modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
     ) {
-        Text(rank, modifier = Modifier
+        Text(rank,
+            fontSize = 22.sp,
+            modifier = Modifier
             .weight(0.1f))
-        Text(name, modifier = Modifier.weight(0.2f))
-        Text(totalAttendance.toString(), modifier = Modifier.weight(0.2f))
-        Icon(
-            painter = painterResource(id = R.drawable.baseline_golf_course_24),
-            contentDescription = "PersonalIcon",
-            tint = Color.Green, // Tint color for the icon
-            modifier = Modifier.weight(0.1f)
-        )
+        Text(name,
+            fontSize = 22.sp,
+            modifier = Modifier.weight(0.2f))
+        Text(Attendance.toString(),
+            fontSize = 22.sp,
+            modifier = Modifier.weight(0.2f))
+        Box(modifier = Modifier.weight(0.1f)) {GradeImageId(Attendance)}
     }
 }
 
@@ -217,7 +226,7 @@ fun RoomScreen(
 
                 items(sortedList) { member ->
                     // sortByAttendance에 따라 출석 횟수를 올바른 속성에 할당
-                    val totalAttendance = if (sortByAttendance) {
+                    val Attendance = if (sortByAttendance) {
                         member.memberTotalAttendance
                     } else {
                         member.memberMonthAttendance
@@ -225,7 +234,7 @@ fun RoomScreen(
                     MemberRow(
                         rank = (sortedList.indexOf(member) + 1).toString(),
                         name = member.memberNumber,
-                        totalAttendance = totalAttendance
+                        Attendance = Attendance
                     )
                 }
             }

@@ -158,15 +158,11 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_golf_course_24),
-                            contentDescription = "PersonalIcon",
-                            tint = Color.Green, // Tint color for the icon
-                            modifier = Modifier.size(100.dp) // Size of the icon
-                        )
-                       Text(
+                        firstResult?.let { it1 -> DividingGrades(TotalAttendance = it1.memberTotalAttendance, imageModifier = Modifier.size(150.dp, 150.dp)) }
+                        Text(
                                 "나의 등급",
-                                fontSize = 30.sp
+                                fontSize = 20.sp,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
                     }
                     Column {
@@ -308,7 +304,9 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
 
                         if (firstResult != null) {
                             if(firstResult.memberTotalAttendance%10 == 0) {
-                                MyLottieAnimation(modifier = Modifier.align(Alignment.Center))
+                                Lottie(R.raw.congratulations, modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .size(400.dp, 170.dp))
                             }
                         }
 
