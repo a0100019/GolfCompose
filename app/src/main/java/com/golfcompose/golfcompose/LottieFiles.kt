@@ -46,5 +46,5 @@ fun Lottie(rawResId: Int, modifier: Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun LottieFilesPreview() {
-    Lottie(R.raw.heart, modifier = Modifier.size(500.dp, 500.dp))
+    Lottie(R.raw.spaceship, modifier = Modifier.size(500.dp, 500.dp))
 }
