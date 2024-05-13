@@ -22,7 +22,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.golfcompose.golfcompose.room.RankScreen
 import com.golfcompose.golfcompose.ui.theme.GolfComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -95,7 +94,7 @@ fun MainScreen(navController: NavController) {
                 .fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Row {
+            Row(modifier = Modifier.weight(0.3f)) {
                 Column(modifier = Modifier.weight(0.8f),
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("출석", fontSize = 50.sp)
@@ -106,7 +105,9 @@ fun MainScreen(navController: NavController) {
                     CurrentTimeText()
                 }
             }
-            SearchNumberScreen(navController = navController)
+            Row(modifier = Modifier.weight(0.7f)) {
+                SearchNumberScreen(navController = navController)
+            }
 
         }
     }
@@ -124,7 +125,6 @@ fun NumberPadsPreview() {
 
 
 
-//
 //@Preview(showBackground = true, widthDp = 2000, heightDp = 1200)
 //@Composable
 //fun PersonalScreenPreview() {

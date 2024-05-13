@@ -1,11 +1,12 @@
-package com.golfcompose.golfcompose.room
+package com.golfcompose.golfcompose
 
 
+import android.annotation.SuppressLint
 import android.app.Application
-import android.graphics.Paint.Align
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,9 +23,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material.*
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -33,20 +33,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import com.golfcompose.golfcompose.GradeImageId
-import com.golfcompose.golfcompose.R
+import com.golfcompose.golfcompose.room.MainViewModel
+import com.golfcompose.golfcompose.room.Member
 import com.golfcompose.golfcompose.ui.theme.GolfComposeTheme
 
 
@@ -103,10 +102,10 @@ fun TitleRow(head1: String, head2:String, head3:String, head4:String) {
         Text(head2,
             fontSize = 25.sp,
             modifier = Modifier
-                .weight(0.2f))
+                .weight(0.3f))
         Text(head3,
             fontSize = 25.sp,
-            modifier = Modifier.weight(0.2f))
+            modifier = Modifier.weight(0.1f))
         Text(head4,
             fontSize = 25.sp,
             modifier = Modifier.weight(0.1f))
@@ -114,7 +113,7 @@ fun TitleRow(head1: String, head2:String, head3:String, head4:String) {
 }
 
 @Composable
-fun MemberRow(rank: String, name: String, Attendance: Int) {
+fun MemberRow(rank: String, name: String, Attendance: Int, TotalAttendance: Int) {
     Row(
         verticalAlignment = Alignment.CenterVertically
         ,modifier = Modifier
@@ -127,11 +126,11 @@ fun MemberRow(rank: String, name: String, Attendance: Int) {
             .weight(0.1f))
         Text(name,
             fontSize = 22.sp,
-            modifier = Modifier.weight(0.2f))
+            modifier = Modifier.weight(0.3f))
         Text(Attendance.toString(),
             fontSize = 22.sp,
-            modifier = Modifier.weight(0.2f))
-        Box(modifier = Modifier.weight(0.1f)) {GradeImageId(Attendance)}
+            modifier = Modifier.weight(0.1f))
+        Box(modifier = Modifier.weight(0.1f)) {GradeImageId(TotalAttendance)}
     }
 }
 
@@ -170,6 +169,7 @@ fun ScreenSetup(viewModel: MainViewModel) {
     )
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun RoomScreen(
     allMembers: List<Member>,
@@ -187,6 +187,8 @@ fun RoomScreen(
     val onTotalAttendanceTextChange = { text: String ->
         memberTotalAttendance = text
     }
+    val backgroundColorReverse = if (sortByAttendance) Color.LightGray else Color.Unspecified
+    val backgroundColor = if (sortByAttendance) Color.Unspecified else Color.LightGray
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -195,16 +197,42 @@ fun RoomScreen(
         ) {
 
 
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
 
-//정렬 방식 바꾸기 버튼
+                //정렬 방식 바꾸기 버튼
                 Button(
                     onClick = {
 // 정렬 방식 변경
-                        sortByAttendance = !sortByAttendance
-                    }
+                        sortByAttendance = true
+                    },
+                    border = BorderStroke(1.dp, Color.Black), // 테두리 추가
+                    modifier = Modifier.padding(4.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor)
+                    // 패딩 설정
                 ) {
-                    Text(if (sortByAttendance) "전체 출석" else "이번 달 출석")
+                    Text("전체 출석")
                 }
+
+                Button(
+                    onClick = {
+// 정렬 방식 변경
+                        sortByAttendance = false
+                    },
+                    border = BorderStroke(1.dp, Color.Black), // 테두리 추가
+                    modifier = Modifier.padding(4.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColorReverse)
+// 패딩 설정
+                ) {
+                    Text("이번 달 출석")
+                }
+
+
+            }
+
+
 
 
 // 정렬된 리스트 가져오기
@@ -221,7 +249,7 @@ fun RoomScreen(
                     .padding(10.dp)
             ) {
                 item {
-                    TitleRow(head1 = "순위", head2 = "닉네임", head3 = "출석 횟수", head4 = "등급")
+                    TitleRow(head1 = "순위", head2 = "닉네임", head3 = "횟수", head4 = "등급")
                 }
 
                 items(sortedList) { member ->
@@ -234,7 +262,8 @@ fun RoomScreen(
                     MemberRow(
                         rank = (sortedList.indexOf(member) + 1).toString(),
                         name = member.memberNumber,
-                        Attendance = Attendance
+                        Attendance = Attendance,
+                        TotalAttendance = member.memberTotalAttendance
                     )
                 }
             }

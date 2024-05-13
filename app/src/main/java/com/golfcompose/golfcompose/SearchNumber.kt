@@ -2,14 +2,13 @@ package com.golfcompose.golfcompose
 
 
 import android.app.Application
-import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,10 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavController
 import com.golfcompose.golfcompose.room.MainViewModel
-import com.golfcompose.golfcompose.room.MainViewModelFactory
 import com.golfcompose.golfcompose.room.Member
 
 
@@ -91,19 +90,29 @@ fun RoomScreen2(
         Row( horizontalArrangement = Arrangement.Center) {
             Text(text = "010-",fontSize = 50.sp)
             Text(
-                text = number,
+                text =
+                    if (number.length > 4) {
+                        number.substring(0,4) + "-" + number.substring(4)
+                    } else {
+                        number
+                    },
                 fontSize = 50.sp
             )
 
         }
 
+        Spacer(modifier = Modifier.size(50.dp))
+
+
         NumberPads(
             onNumberAdded = { addedNumber ->
-                number += addedNumber.toString()
+                if(number.length < 8) {
+                    number += addedNumber.toString()
+                }
+                //나중에 8로 변경해야됨!!!!!!!!!!!!!!!!!
                 if(number.length == 2) {
                     viewModel.findMember(number)
                 }
-
             },
             onDeleted = { ->
                 if (number.isNotEmpty()) {
@@ -141,7 +150,8 @@ fun RoomScreen2(
 
                 }
 
-            }
+            },
+            numberDigit = number.length
         )
 
     }
