@@ -109,8 +109,7 @@ fun RoomScreen2(
                 if(number.length < 8) {
                     number += addedNumber.toString()
                 }
-                //나중에 8로 변경해야됨!!!!!!!!!!!!!!!!!
-                if(number.length == 2) {
+                if(number.length == 8) {
                     viewModel.findMember(number)
                 }
             },
@@ -137,10 +136,12 @@ fun RoomScreen2(
                         navController.navigate("PersonalScreen/$number")
                     } else {
 
+
                         Log.d("SearchNumber", "값이 없음")
                         viewModel.insertMember(
                             Member(
-                                number
+                                number,
+                                number.take(4)
                             )
                         )
                         navController.navigate("PersonalScreen/$number")

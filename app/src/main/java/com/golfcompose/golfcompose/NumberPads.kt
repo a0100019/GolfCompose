@@ -90,7 +90,7 @@ fun CheckPad(onClick: () -> Unit, numberDigit: Int) {
 
     //if 문 간소화 ㄷㄷ
     //나중에 8로 변경해야됨!!!!!!!!!!!!!!!!!
-    clickEnabled = numberDigit == 2
+    clickEnabled = numberDigit == 8
 
     Button(
         enabled = clickEnabled,

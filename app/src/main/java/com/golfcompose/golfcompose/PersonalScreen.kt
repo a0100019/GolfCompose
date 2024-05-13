@@ -31,8 +31,6 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.golfcompose.golfcompose.room.MainViewModel
-import com.golfcompose.golfcompose.room.MainViewModelFactory
-import com.golfcompose.golfcompose.room.RankScreen
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ExperimentalMaterial3Api

@@ -261,7 +261,7 @@ fun RoomScreen(
                     }
                     MemberRow(
                         rank = (sortedList.indexOf(member) + 1).toString(),
-                        name = member.memberNumber,
+                        name = member.memberName,
                         Attendance = Attendance,
                         TotalAttendance = member.memberTotalAttendance
                     )

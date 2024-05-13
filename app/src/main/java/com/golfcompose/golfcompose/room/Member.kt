@@ -34,9 +34,9 @@ class Member {
     constructor(memberNumber: String) {
         this.memberNumber = memberNumber
     }
-    constructor(memberNumber: String, memberTotalAttendance: Int) {
+    constructor(memberNumber: String, memberName: String) {
         this.memberNumber = memberNumber
-        this.memberTotalAttendance = memberTotalAttendance
+        this.memberName = memberName
     }
 
 }
