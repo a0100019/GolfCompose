@@ -34,6 +34,7 @@ import com.golfcompose.golfcompose.room.MainViewModel
 import com.golfcompose.golfcompose.room.MainViewModelFactory
 import com.golfcompose.golfcompose.room.RankScreen
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -356,14 +357,10 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                         Text("쿠폰함", fontSize = 30.sp)
                         Row {
                             Column {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.baseline_golf_course_24),
-                                    contentDescription = "PersonalIcon",
-                                    tint = Color.Green, // Tint color for the icon
+                                Lottie(rawResId = R.raw.coffee,
                                     modifier = Modifier
-                                        .size(50.dp)
-                                        .clickable { showCoffeeDialog = true }
-                                )
+                                        .size(150.dp)
+                                        .clickable {showCoffeeDialog = true })
                                 Text("커피 교환권", fontSize = 20.sp)
                             }
                             if (firstResult != null) {
@@ -376,17 +373,20 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                             }
                             Text("개", fontSize = 20.sp)
 
-                            Column {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.baseline_golf_course_24),
-                                    contentDescription = "PersonalIcon",
-                                    tint = Color.Green, // Tint color for the icon
-                                    modifier = Modifier.size(50.dp)
-                                )
-                                Text("커피 교환권", fontSize = 20.sp)
-                            }
-                            Text("10", fontSize = 20.sp)
-                            Text("개", fontSize = 20.sp)
+//                            Column {
+//                                Icon(
+//                                    painter = painterResource(id = R.drawable.baseline_golf_course_24),
+//                                    contentDescription = "PersonalIcon",
+//                                    tint = Color.Green, // Tint color for the icon
+//                                    modifier = Modifier
+//                                        .size(50.dp)
+//                                        .clickable { showCoffeeDialog = true }
+//
+//                                )
+//                                Text("커피 교환권", fontSize = 20.sp)
+//                            }
+//                            Text("10", fontSize = 20.sp)
+//                            Text("개", fontSize = 20.sp)
                         }
                         Text("쿠폰을 사용하시려면 직원에게 말씀해주세요.")
                     }
@@ -441,7 +441,6 @@ fun convertMillisToDateTimeString(millis: Long): String {
 }
 
 
-//이름 변경 다이얼로그
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateNameDialog(
@@ -459,10 +458,22 @@ fun UpdateNameDialog(
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
+                    Text("새 닉네임을 입력해주세요 (10글자 이하)", fontSize = 20.sp)
                     OutlinedTextField(
                         value = newName,
-                        onValueChange = { newName = it },
-                        label = { Text("새 이름") }
+                        onValueChange = {
+                            // 입력된 값이 10글자 이하인 경우에만 newName 업데이트
+                            if (it.length in 1..10) {
+                                newName = it
+                            }
+                        },
+                        label = { Text("새 이름") },
+                        singleLine = true, // 단일 라인으로 설정하여 엔터 키 입력 방지
+                        keyboardActions = KeyboardActions {
+                            // 엔터 키 입력 시 이벤트를 소비하여 다이얼로그가 닫히지 않도록 함
+                            onDismiss()
+                            onConfirm(newName)
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -485,6 +496,7 @@ fun UpdateNameDialog(
         }
     }
 }
+
 
 //커피 개수 변경 다이얼로그
 @OptIn(ExperimentalMaterial3Api::class)
@@ -723,12 +735,7 @@ fun PersonalScreenPreview() {
                     Text("쿠폰함", fontSize = 30.sp)
                     Row {
                         Column {
-                            Icon(
-                                painter = painterResource(id = R.drawable.baseline_golf_course_24),
-                                contentDescription = "PersonalIcon",
-                                tint = Color.Green, // Tint color for the icon
-                                modifier = Modifier.size(150.dp) // Size of the icon
-                            )
+                            Lottie(rawResId = R.raw.coffee, modifier = Modifier.size(150.dp))
                             Text("커피 교환권", fontSize = 20.sp)
                         }
                         Text("10", fontSize = 20.sp)
