@@ -38,6 +38,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Dialog
+import kotlinx.coroutines.delay
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -120,8 +121,10 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
             onDismiss = { showNameDialog = false }, // 다이얼로그가 닫힐 때 showDialog 값을 변경하여 다이얼로그를 닫음
             onConfirm = { newName ->
                 // 여기서 새 이름으로 업데이트 작업 수행
-                viewModel.updateMemberName(number, newName)
-                showNameDialog = false // 다이얼로그가 닫힘
+                if( newName.length >= 1) {
+                    viewModel.updateMemberName(number, newName)
+                    showNameDialog = false // 다이얼로그가 닫힘
+                }
             }
         )
 
@@ -352,54 +355,33 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                         modifier = Modifier.weight(0.8f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("쿠폰함", fontSize = 30.sp)
                         Row {
-                            Column {
+
                                 Lottie(rawResId = R.raw.coffee,
                                     modifier = Modifier
                                         .size(150.dp)
                                         .clickable {showCoffeeDialog = true })
-                                Text("커피 교환권", fontSize = 20.sp)
-                            }
-                            if (firstResult != null) {
-                                Text(
-                                    firstResult.memberCoffee.toString(),
-                                    fontSize = 20.sp
-                                )
-                            } else {
-                                Text("???")
-                            }
-                            Text("개", fontSize = 20.sp)
 
-//                            Column {
-//                                Icon(
-//                                    painter = painterResource(id = R.drawable.baseline_golf_course_24),
-//                                    contentDescription = "PersonalIcon",
-//                                    tint = Color.Green, // Tint color for the icon
-//                                    modifier = Modifier
-//                                        .size(50.dp)
-//                                        .clickable { showCoffeeDialog = true }
-//
-//                                )
-//                                Text("커피 교환권", fontSize = 20.sp)
-//                            }
-//                            Text("10", fontSize = 20.sp)
-//                            Text("개", fontSize = 20.sp)
+                            Column {
+
+                                Text("커피 교환권", fontSize = 30.sp)
+
+                                if (firstResult != null) {
+                                    Text(
+                                        firstResult.memberCoffee.toString() + "개",
+                                        fontSize = 35.sp
+                                    )
+                                } else {
+                                    Text("???")
+                                }
+
+                            }
+
                         }
                         Text("쿠폰을 사용하시려면 직원에게 말씀해주세요.")
                     }
 
-                    Button(
-                        modifier = Modifier
-                            .size(50.dp, 70.dp)
-                            .weight(0.2f)
-                            .align(Alignment.Bottom),
-                        onClick = {
-                            Log.d("SearchNumber", "값이 있음3 ${firstResult?.memberNumber}")
-                            navController.popBackStack() }
-                    ) {
-                        Text("확인", fontSize = 30.sp)
-                    }
+                    ExitButton(navController = navController)
 
                 }
 
@@ -413,6 +395,32 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
 
 }
 
+
+//나가기 버튼
+@Composable
+fun ExitButton(navController: NavController) {
+    var remainingTime by remember { mutableStateOf(150) }
+
+    LaunchedEffect(Unit) {
+        while (remainingTime > 0) {
+            delay(1000L) // 1 second
+            remainingTime--
+        }
+        navController.popBackStack()
+    }
+
+    Button(
+        onClick = {
+            navController.popBackStack()
+        }
+    ) {
+        Text(
+            text = "남은 시간: $remainingTime 초",
+            fontSize = 24.sp,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
 
 
 fun intervalOfTime(storedTime : Long) : String {
