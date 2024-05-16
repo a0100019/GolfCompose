@@ -19,9 +19,28 @@ fun GradeImageId(TotalAttendance : Int) {
 @Composable
 fun DividingGrades(TotalAttendance: Int, imageModifier: Modifier) {
     when (TotalAttendance) {
-        1 -> Lottie(rawResId = R.raw.dog, modifier = imageModifier)
+        1 -> Lottie(rawResId = R.raw.bee, modifier = imageModifier)
         2 -> Lottie(rawResId = R.raw.heart, modifier = imageModifier)
-        else -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        3 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        4 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        5 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        6 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        7 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        8 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        9 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        10 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        11 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        12 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        13 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        14 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        15 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        16 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        17 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        18 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        19 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        20 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+        21 -> Lottie(rawResId = R.raw.fire, modifier = imageModifier)
+
     }
 }
 

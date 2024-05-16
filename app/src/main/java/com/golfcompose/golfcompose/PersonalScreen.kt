@@ -2,6 +2,7 @@ package com.golfcompose.golfcompose
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.golfcompose.golfcompose.room.MainViewModel
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
@@ -54,7 +56,6 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
 // 다이얼로그 표시 여부를 제어하기 위한 상태 변수
     var showNameDialog by remember { mutableStateOf(false) }
     var showCoffeeDialog by remember { mutableStateOf(false) }
-
 
     owner?.let {
         val viewModel: MainViewModel = viewModel(
@@ -128,6 +129,7 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
             }
         )
 
+
         UpdateCoffeeDialog(
             showDialog = showCoffeeDialog,
             onDismiss = { showCoffeeDialog = false }, // 다이얼로그가 닫힐 때 showDialog 값을 변경하여 다이얼로그를 닫음
@@ -161,10 +163,11 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                 ) {
                     Column {
                         firstResult?.let { it1 -> DividingGrades(TotalAttendance = it1.memberTotalAttendance, imageModifier = Modifier.size(150.dp, 150.dp)) }
+
                         Text(
                                 "나의 등급",
                                 fontSize = 20.sp,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
+//                                modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
                     }
                     Column {
@@ -380,8 +383,9 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                         }
                         Text("쿠폰을 사용하시려면 직원에게 말씀해주세요.")
                     }
-
-                    ExitButton(navController = navController)
+                    Box(modifier = Modifier.align(Alignment.Bottom).padding(30.dp)){
+                        ExitButton(navController = navController)
+                    }
 
                 }
 
@@ -412,10 +416,12 @@ fun ExitButton(navController: NavController) {
     Button(
         onClick = {
             navController.popBackStack()
-        }
+        },
+        border = BorderStroke(1.dp, Color.Black),
+        shape = RoundedCornerShape(4.dp)// 버튼의 둥근 정도를 조절하는 부분
     ) {
         Text(
-            text = "남은 시간: $remainingTime 초",
+            text = "확인 (${remainingTime}초)",
             fontSize = 24.sp,
             modifier = Modifier.padding(16.dp)
         )
@@ -502,6 +508,8 @@ fun UpdateNameDialog(
         }
     }
 }
+
+
 
 
 //커피 개수 변경 다이얼로그
