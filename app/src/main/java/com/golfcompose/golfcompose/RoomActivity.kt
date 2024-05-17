@@ -113,7 +113,7 @@ fun TitleRow(head1: String, head2:String, head3:String, head4:String) {
 }
 
 @Composable
-fun MemberRow(rank: String, name: String, Attendance: Int, TotalAttendance: Int) {
+fun MemberRow(rank: String, name: String, Attendance: Int, MonthAttendance: Int) {
     Row(
         verticalAlignment = Alignment.CenterVertically
         ,modifier = Modifier
@@ -130,7 +130,7 @@ fun MemberRow(rank: String, name: String, Attendance: Int, TotalAttendance: Int)
         Text(Attendance.toString(),
             fontSize = 22.sp,
             modifier = Modifier.weight(0.1f))
-        Box(modifier = Modifier.weight(0.1f)) {GradeImageId(TotalAttendance)}
+        Box(modifier = Modifier.weight(0.1f)) {GradeImageId(MonthAttendance)}
     }
 }
 
@@ -263,7 +263,7 @@ fun RoomScreen(
                         rank = (sortedList.indexOf(member) + 1).toString(),
                         name = member.memberName,
                         Attendance = Attendance,
-                        TotalAttendance = member.memberTotalAttendance
+                        MonthAttendance = member.memberMonthAttendance
                     )
                 }
             }

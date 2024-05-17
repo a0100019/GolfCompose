@@ -44,8 +44,10 @@ import kotlinx.coroutines.delay
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Date
 
 //개인화면
@@ -87,6 +89,8 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
         //첫 로그인 확인 함수
         firstResult?.let { it1 ->
             val memberFirstTime = it1.memberFirstTime
+            val memberMonthTime = it1.memberMonthTime
+
             // 현재 날짜 가져오기
             val currentDate = LocalDate.now()
 
@@ -96,10 +100,36 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                 ZoneId.systemDefault()
             ).toLocalDate()
 
+            // firstResult.memberFirstTime의 시간을 LocalDate로 변환
+            val memberMonthDate = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(memberMonthTime),
+                ZoneId.systemDefault()
+            ).toLocalDate()
+
             // 현재 날짜와 memberFirstDate를 비교하여 날짜가 다른지 확인
             val dateDifference = currentDate.compareTo(memberFirstDate)
 
-            if (dateDifference != 0) {
+            // 달과 관련된 코드
+            val currentYearMonth = YearMonth.from(currentDate)
+            val memberYearMonth = YearMonth.from(memberMonthDate)
+            val monthDifference = ChronoUnit.MONTHS.between(memberYearMonth, currentYearMonth)
+
+            //달이 다른지 날짜가 다른지 확인하는 코드
+            if (monthDifference.toInt() != 0) {
+                allMembers.forEach { member ->
+                    if(member.memberNumber.equals(number)) {
+                        viewModel.updateMemberMonthAttendance(number, 1)
+                    } else {
+                        viewModel.updateMemberMonthAttendance(member.memberNumber, 0)
+                    }
+                    viewModel.updateMemberMonthTime(member.memberNumber, Date().time)
+                }
+                if(firstResult.memberTotalAttendance % 10 == 9) {
+                    viewModel.updateMemberCoffee(number, firstResult.memberCoffee + 1)
+                }
+                viewModel.updateMemberTotalAttendance(number, firstResult.memberTotalAttendance + 1)
+                viewModel.updateMemberFirstTime(number, Date().time)
+            } else if (dateDifference != 0) {
                 // 날짜가 다른 경우에만 이 코드 블록이 실행됩니다.
                 // 여기에 원하는 작업을 추가하세요.
                 Log.d("SearchNumber", "날짜 다름")
@@ -112,6 +142,7 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
             } else {
                 // 날짜가 같은 경우에는 아무 작업도 수행하지 않습니다.
             }
+
         }
 
 
@@ -162,12 +193,12 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column {
-                        firstResult?.let { it1 -> DividingGrades(TotalAttendance = it1.memberTotalAttendance, imageModifier = Modifier.size(150.dp, 150.dp)) }
+                        firstResult?.let { it1 -> DividingGrades(TotalAttendance = it1.memberMonthAttendance, imageModifier = Modifier.size(150.dp, 150.dp)) }
 
                         Text(
                                 "나의 등급",
                                 fontSize = 20.sp,
-//                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                          modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
                     }
                     Column {
@@ -183,7 +214,7 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
                                 "$number",
-                                fontSize = 20.sp
+                                fontSize = 25.sp
                             )
                         }
                         // 다이얼로그 표시 여부를 변경하는 버튼
@@ -203,6 +234,8 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
 
                     }
                 }
+
+                    .toString()
 
                 Row {
                     Column(modifier = Modifier.weight(0.6f)) {

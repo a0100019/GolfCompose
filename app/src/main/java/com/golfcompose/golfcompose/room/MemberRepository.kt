@@ -64,6 +64,12 @@ class MemberRepository(private val memberDao: MemberDao) {
         }
     }
 
+    fun updateMemberMonthTime(memberNumber: String, newMonthTime: Long) {
+        coroutineScope.launch(Dispatchers.IO) {
+            memberDao.updateMemberMonthTime(memberNumber, newMonthTime)
+        }
+    }
+
 
     private fun asyncFind(number: String): Deferred<List<Member>?> =
         coroutineScope.async(Dispatchers.IO) {

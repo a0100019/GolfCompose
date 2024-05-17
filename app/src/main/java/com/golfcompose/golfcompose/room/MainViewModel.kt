@@ -50,6 +50,11 @@ class MainViewModel(application: Application) : ViewModel() {
         repository.updateMemberFirstTime(memberNumber, newMemberFirstTime)
     }
 
+    fun updateMemberMonthTime(memberNumber: String, newMemberMonthTime: Long) {
+        repository.updateMemberMonthTime(memberNumber, newMemberMonthTime)
+    }
+
+
 
 
 //    fun deleteMember(name: String) {

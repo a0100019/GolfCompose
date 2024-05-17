@@ -29,6 +29,9 @@ class Member {
     @ColumnInfo(name = "memberFirstTime")
     var memberFirstTime: Long = Date().time
 
+    @ColumnInfo(name = "memberMonthTime")
+    var memberMonthTime: Long = Date().time
+
     constructor()
 
     constructor(memberNumber: String) {

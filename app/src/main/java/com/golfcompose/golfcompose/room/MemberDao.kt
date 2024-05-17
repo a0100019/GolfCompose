@@ -34,6 +34,10 @@ interface MemberDao {
     @Query("UPDATE members SET memberFirstTime = :newMemberFirstTime WHERE memberNumber = :memberNumber")
     fun updateMemberFirstTime(memberNumber: String, newMemberFirstTime: Long)
 
+    @Query("UPDATE members SET memberMonthTime = :newMemberMonthTime WHERE memberNumber = :memberNumber")
+    fun updateMemberMonthTime(memberNumber: String, newMemberMonthTime: Long)
+
+
     @Query("SELECT * FROM members")
     fun getAllProducts(): LiveData<List<Member>>
 
