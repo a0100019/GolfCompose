@@ -14,6 +14,9 @@ interface MemberDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMember(member: Member)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAllMember(member: Member)
+
     //전화번호 검색
     @Query("SELECT * FROM members WHERE memberNumber = :number")
     fun findMember(number: String): List<Member>

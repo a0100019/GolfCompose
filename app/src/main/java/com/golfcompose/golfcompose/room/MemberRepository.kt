@@ -15,9 +15,15 @@ class MemberRepository(private val memberDao: MemberDao) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
 
-    fun insertMember(newmember: Member) {
+    fun insertMember(newMember: Member) {
         coroutineScope.launch(Dispatchers.IO) {
-            memberDao.insertMember(newmember)
+            memberDao.insertMember(newMember)
+        }
+    }
+
+    fun insertAllMember(newMember: Member) {
+        coroutineScope.launch(Dispatchers.IO) {
+            memberDao.insertAllMember(newMember)
         }
     }
 

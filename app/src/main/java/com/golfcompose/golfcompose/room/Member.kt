@@ -42,4 +42,12 @@ class Member {
         this.memberName = memberName
     }
 
+    constructor(memberNumber: String, memberName: String, memberTotalAttendance: Int, memberMonthAttendance: Int, memberCoffee: Int) {
+        this.memberNumber = memberNumber
+        this.memberName = memberName
+        this.memberTotalAttendance = memberTotalAttendance
+        this.memberMonthAttendance = memberMonthAttendance
+        this.memberCoffee = memberCoffee
+    }
+
 }

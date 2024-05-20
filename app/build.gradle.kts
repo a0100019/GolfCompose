@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -84,6 +85,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
     //로티파일
     implementation ("com.airbnb.android:lottie-compose:6.4.0")
-
+    //파이어베이스
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-analytics")
 
 }

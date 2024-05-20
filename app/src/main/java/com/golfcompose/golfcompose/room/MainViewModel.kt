@@ -26,6 +26,10 @@ class MainViewModel(application: Application) : ViewModel() {
         repository.insertMember(member)
     }
 
+    fun insertAllMember(member: Member) {
+        repository.insertAllMember(member)
+    }
+
     fun findMember(number: String) {
         repository.findMember(number)
     }

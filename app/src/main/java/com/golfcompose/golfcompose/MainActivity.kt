@@ -76,44 +76,6 @@ fun NavigationScreen() {
 }
 
 
-
-@Composable
-fun MainScreen(navController: NavController) {
-//    var number by remember { mutableStateOf("010-") }
-
-    Row {
-        Column(modifier = Modifier
-            .weight(0.3f)
-            .fillMaxHeight()) {
-            RankScreen()
-        }
-
-        Column(
-            modifier = Modifier
-                .weight(0.7f)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(modifier = Modifier.weight(0.3f)) {
-                Column(modifier = Modifier.weight(0.8f),
-                    horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("출석", fontSize = 50.sp)
-                    Text("전화번호를 입력해주세요", fontSize = 30.sp)
-                }
-                Column(modifier = Modifier.weight(0.2f)) {
-                    Text("현재 시각", fontSize = 30.sp)
-                    CurrentTimeText()
-                }
-            }
-            Row(modifier = Modifier.weight(0.7f)) {
-                SearchNumberScreen(navController = navController)
-            }
-
-        }
-    }
-}
-
-
 @Preview(showBackground = true, widthDp = 2000, heightDp = 1200)
 @Composable
 fun NumberPadsPreview() {

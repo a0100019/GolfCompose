@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "2614399884",
+    "project_id": "golf-compose",
+    "storage_bucket": "golf-compose.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2614399884:android:2c582036a03231201f3ca9",
+        "android_client_info": {
+          "package_name": "com.golfcompose.golfcompose"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgxWxAZqHDpoLkIbojEAYS55F95bl3qsc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
