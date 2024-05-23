@@ -8,8 +8,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavController
 import com.golfcompose.golfcompose.room.MainViewModel
@@ -78,6 +86,20 @@ fun RoomScreen2(
     navController: NavController
 ) {
     var searching by remember { mutableStateOf(false) }
+    var showFirstLoginDialog by remember { mutableStateOf(false) }
+
+
+    // 다이얼로그 표시
+    FirstLoginDialog(
+        showDialog = showFirstLoginDialog,
+        onDismiss = { showFirstLoginDialog = false }, // 다이얼로그가 닫힐 때 showDialog 값을 변경하여 다이얼로그를 닫음
+        onConfirm = { newName ->
+
+
+                showFirstLoginDialog = false // 다이얼로그가 닫힘
+
+        }
+    )
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -159,4 +181,43 @@ fun RoomScreen2(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FirstLoginDialog(
+    showDialog: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
+    if (showDialog) {
+        Dialog(onDismissRequest = onDismiss) {
+            var newName by remember { mutableStateOf("") }
+
+            Surface(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text("첫 로그인을 진행하겠습니까?", fontSize = 20.sp)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Button(
+                            onClick = {
+                                onDismiss()
+                                onConfirm(newName)
+                            }
+                        ) {
+                            Text("확인")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 

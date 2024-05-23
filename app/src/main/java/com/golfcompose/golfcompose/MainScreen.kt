@@ -1,6 +1,7 @@
 package com.golfcompose.golfcompose
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -33,6 +35,14 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.golfcompose.golfcompose.room.MainViewModel
+import com.golfcompose.golfcompose.room.Member
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObjects
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 
 @Composable
@@ -61,11 +71,46 @@ fun MainScreen(navController: NavController) {
 
         // 다이얼로그 표시
         DataLoadDialog(
-            showDialog = dataLoad,
-            onDismiss = { dataLoad = false }, // 다이얼로그가 닫힐 때 showDialog 값을 변경하여 다이얼로그를 닫음
-            onConfirm = { newName ->
+            showDialog = titleClickNumber % 2 == 1 && titleClickNumber > 4,
+            onDismiss = { titleClickNumber++ }, // 다이얼로그가 닫힐 때 showDialog 값을 변경하여 다이얼로그를 닫음
+            onConfirm = {
+                Log.d("MainScreen", "onConfirm")
+
+                val firestore = Firebase.firestore
+
+//                val data1 = hashMapOf(
+//                    "name" to "San Francisco",
+//                    "state" to "CA",
+//                    "country" to "USA",
+//                    "capital" to false,
+//                    "population" to 860000,
+//                    "regions" to listOf("west_coast", "norcal"),
+//                )
+//                firestore.collection("number").document("SF").set(data1)
 
 
+                firestore.collection("number")
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        Log.d("MainScreen", "${documents.size()}")
+                        for (document in documents) {
+                            Log.d("MainScreen", "${document.id} => ${document.data}")
+                            val member = Member(
+                                memberNumber = document.getString("number") ?: "",
+                                memberTotalAttendance = document.getLong("totalAttendance")?.toInt() ?: 0,
+                                memberMonthAttendance = document.getLong("monthAttendance")?.toInt() ?: 0,
+                                memberName = document.getString("name") ?: "",
+                                memberCoffee = document.getLong("coffee")?.toInt() ?: 0
+                            )
+                            viewModel.insertAllMember(member)
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.w("MainScreen", "Error getting documents: ", exception)
+                    }
+
+
+                Log.d("MainScreen", "end")
 
             }
         )
@@ -122,11 +167,10 @@ fun MainScreen(navController: NavController) {
 fun DataLoadDialog(
     showDialog: Boolean,
     onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit
+    onConfirm: () -> Unit
 ) {
     if (showDialog) {
         Dialog(onDismissRequest = onDismiss) {
-            var newName by remember { mutableStateOf("") }
 
             Surface(
                 modifier = Modifier.padding(16.dp)
@@ -134,23 +178,7 @@ fun DataLoadDialog(
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Text("새 닉네임을 입력해주세요 (10글자 이하)", fontSize = 20.sp)
-                    OutlinedTextField(
-                        value = newName,
-                        onValueChange = {
-                            // 입력된 값이 10글자 이하인 경우에만 newName 업데이트
-                            if (it.length in 1..10) {
-                                newName = it
-                            }
-                        },
-                        label = { Text("새 이름") },
-                        singleLine = true, // 단일 라인으로 설정하여 엔터 키 입력 방지
-                        keyboardActions = KeyboardActions {
-                            // 엔터 키 입력 시 이벤트를 소비하여 다이얼로그가 닫히지 않도록 함
-                            onDismiss()
-                            onConfirm(newName)
-                        }
-                    )
+                    Text("데이터를 받아오겠습니까? 관계자 외 조작시, 데이터에 손상이 생긴 경우 법적 처벌을 받을 수 있습니다.", fontSize = 20.sp)
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -161,7 +189,7 @@ fun DataLoadDialog(
                         Button(
                             onClick = {
                                 onDismiss()
-                                onConfirm(newName)
+                                onConfirm()
                             }
                         ) {
                             Text("확인")

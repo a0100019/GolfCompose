@@ -40,6 +40,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Dialog
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.delay
 import java.time.Instant
 import java.time.LocalDate
@@ -58,6 +60,8 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
 // 다이얼로그 표시 여부를 제어하기 위한 상태 변수
     var showNameDialog by remember { mutableStateOf(false) }
     var showCoffeeDialog by remember { mutableStateOf(false) }
+
+    val firestore = Firebase.firestore
 
     owner?.let {
         val viewModel: MainViewModel = viewModel(
@@ -116,6 +120,13 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
 
             //달이 다른지 날짜가 다른지 확인하는 코드
             if (monthDifference.toInt() != 0) {
+
+                if(firstResult.memberTotalAttendance % 10 == 9) {
+                    viewModel.updateMemberCoffee(number, firstResult.memberCoffee + 1)
+                }
+                viewModel.updateMemberTotalAttendance(number, firstResult.memberTotalAttendance + 1)
+                viewModel.updateMemberFirstTime(number, Date().time)
+
                 allMembers.forEach { member ->
                     if(member.memberNumber.equals(number)) {
                         viewModel.updateMemberMonthAttendance(number, 1)
@@ -123,14 +134,19 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                         viewModel.updateMemberMonthAttendance(member.memberNumber, 0)
                     }
                     viewModel.updateMemberMonthTime(member.memberNumber, Date().time)
+
+                    //파이어베이스로 데이터 옮김
+                    val memberData = hashMapOf(
+                        "number" to member.memberNumber,
+                        "totalAttendance" to member.memberTotalAttendance,
+                        "monthAttendance" to member.memberMonthAttendance,
+                        "name" to member.memberName,
+                        "coffee" to member.memberCoffee
+                    )
+                    firestore.collection("number").document(member.memberNumber).set(memberData)
                 }
-                if(firstResult.memberTotalAttendance % 10 == 9) {
-                    viewModel.updateMemberCoffee(number, firstResult.memberCoffee + 1)
-                }
-                viewModel.updateMemberTotalAttendance(number, firstResult.memberTotalAttendance + 1)
-                viewModel.updateMemberFirstTime(number, Date().time)
             } else if (dateDifference != 0) {
-                // 날짜가 다른 경우에만 이 코드 블록이 실행됩니다.
+                // 날짜가 다른 경우에 이 코드 블록이 실행됩니다.
                 // 여기에 원하는 작업을 추가하세요.
                 Log.d("SearchNumber", "날짜 다름")
                 if(firstResult.memberTotalAttendance % 10 == 9) {

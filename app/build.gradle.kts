@@ -88,5 +88,9 @@ dependencies {
     //파이어베이스
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.google.firebase:firebase-firestore-ktx:24.1.0")
+    implementation("com.google.firebase:firebase-firestore")
+
+
 
 }
