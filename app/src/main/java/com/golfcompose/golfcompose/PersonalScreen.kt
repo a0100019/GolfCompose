@@ -40,6 +40,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Dialog
+import com.golfcompose.golfcompose.room.Member
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.delay
@@ -60,6 +61,7 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
 // 다이얼로그 표시 여부를 제어하기 위한 상태 변수
     var showNameDialog by remember { mutableStateOf(false) }
     var showCoffeeDialog by remember { mutableStateOf(false) }
+    var coffeeClickNumber by remember { mutableIntStateOf(0) }
 
     val firestore = Firebase.firestore
 
@@ -173,6 +175,17 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                     viewModel.updateMemberName(number, newName)
                     showNameDialog = false // 다이얼로그가 닫힘
                 }
+            }
+        )
+
+
+        DataLoadDialog(
+            showDialog = coffeeClickNumber % 2 == 1 && coffeeClickNumber > 4,
+            onDismiss = { coffeeClickNumber++ }, // 다이얼로그가 닫힐 때 showDialog 값을 변경하여 다이얼로그를 닫음
+            onConfirm = {
+
+
+
             }
         )
 

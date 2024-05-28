@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -87,16 +88,23 @@ fun RoomScreen2(
 ) {
     var searching by remember { mutableStateOf(false) }
     var showFirstLoginDialog by remember { mutableStateOf(false) }
+    var number by remember { mutableStateOf("") }
 
 
     // 다이얼로그 표시
     FirstLoginDialog(
         showDialog = showFirstLoginDialog,
         onDismiss = { showFirstLoginDialog = false }, // 다이얼로그가 닫힐 때 showDialog 값을 변경하여 다이얼로그를 닫음
-        onConfirm = { newName ->
+        onConfirm = {
 
-
-                showFirstLoginDialog = false // 다이얼로그가 닫힘
+            viewModel.insertMember(
+                Member(
+                    number,
+                    number.take(4)
+                )
+            )
+            navController.navigate("PersonalScreen/$number")
+            showFirstLoginDialog = false // 다이얼로그가 닫힘
 
         }
     )
@@ -106,8 +114,6 @@ fun RoomScreen2(
         modifier = Modifier
             .fillMaxSize()
     ) {
-
-        var number by remember { mutableStateOf("") }
 
         Row( horizontalArrangement = Arrangement.Center) {
             Text(text = "010-",fontSize = 50.sp)
@@ -160,13 +166,9 @@ fun RoomScreen2(
 
 
                         Log.d("SearchNumber", "값이 없음")
-                        viewModel.insertMember(
-                            Member(
-                                number,
-                                number.take(4)
-                            )
-                        )
-                        navController.navigate("PersonalScreen/$number")
+                        showFirstLoginDialog = true
+
+
                     }
 
 
@@ -186,11 +188,10 @@ fun RoomScreen2(
 fun FirstLoginDialog(
     showDialog: Boolean,
     onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit
+    onConfirm: () -> Unit
 ) {
     if (showDialog) {
         Dialog(onDismissRequest = onDismiss) {
-            var newName by remember { mutableStateOf("") }
 
             Surface(
                 modifier = Modifier.padding(16.dp)
@@ -198,7 +199,7 @@ fun FirstLoginDialog(
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Text("첫 로그인을 진행하겠습니까?", fontSize = 20.sp)
+                    Text("기록이 없는 번호 입니다.\n첫 로그인을 하시겠습니까?", fontSize = 20.sp)
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -209,7 +210,17 @@ fun FirstLoginDialog(
                         Button(
                             onClick = {
                                 onDismiss()
-                                onConfirm(newName)
+                            }
+                        ) {
+                            Text("취소")
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Button(
+                            onClick = {
+                                onDismiss()
+                                onConfirm()
                             }
                         ) {
                             Text("확인")
