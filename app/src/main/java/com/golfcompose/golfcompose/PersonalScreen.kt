@@ -179,14 +179,16 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
         )
 
 
-        DataLoadDialog(
-            showDialog = coffeeClickNumber % 2 == 1 && coffeeClickNumber > 4,
+        CoffeePlusDialog(
+            showDialog = coffeeClickNumber % 2 == 0 && coffeeClickNumber > 1,
             onDismiss = { coffeeClickNumber++ }, // 다이얼로그가 닫힐 때 showDialog 값을 변경하여 다이얼로그를 닫음
-            onConfirm = {
+            onConfirm = { CoffeeAmount ->
+                // 여기서 새 이름으로 업데이트 작업 수행
+                    viewModel.updateMemberCoffee(number, CoffeeAmount + 1)
 
-
-
-            }
+                showNameDialog = false // 다이얼로그가 닫힘
+            },
+            coffeeAmount = firstResult?.memberCoffee ?: 0
         )
 
 
@@ -292,7 +294,9 @@ fun PersonalScreen(navController: NavController, number: String = "12345678") {
                             Text(
                                 text = "이번달 순위",
                                 fontSize = 30.sp,
-                                modifier = Modifier.padding(horizontal = 10.dp)
+                                modifier = Modifier.padding(horizontal = 10.dp).clickable {
+                                    coffeeClickNumber++
+                                }
                             )
                             Text(
                                 text = (monthIndex+1).toString(),
@@ -574,7 +578,7 @@ fun UpdateNameDialog(
 
 
 
-//커피 개수 변경 다이얼로그
+//커피 감소 다이얼로그
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateCoffeeDialog(
@@ -624,228 +628,279 @@ fun UpdateCoffeeDialog(
     }
 }
 
-@Preview(showBackground = true, widthDp = 1400, heightDp = 900)
+
+//커피 추가 다이얼로그
 @Composable
-fun PersonalScreenPreview() {
+fun CoffeePlusDialog(
+    showDialog: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit,
+    coffeeAmount: Int
+) {
+    if (showDialog) {
+        Dialog(onDismissRequest = onDismiss) {
 
-    Row {
-        Column(modifier = Modifier
-            .weight(0.3f)
-            .fillMaxHeight()) {
-//            RankScreen()
-            Box() {
-
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .weight(0.7f)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceBetween) {
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+            Surface(
+                modifier = Modifier.padding(16.dp)
             ) {
-                Column {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_golf_course_24),
-                        contentDescription = "PersonalIcon",
-                        tint = Color.Green, // Tint color for the icon
-                        modifier = Modifier.size(150.dp) // Size of the icon
-                    )
-                    Text(
-                        "나의 등급",
-                        fontSize = 30.sp
-                    )
-                }
-                Column {
-                    Row {
-                        Text(
-                            "이름",
-                            fontSize = 30.sp
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(
-                            "1111",
-                            fontSize = 20.sp
-                        )
-                    }
-                    Button(
-                        onClick = { }) {
-                        Text("이름 변경")
-                    }
-                }
-                Column {
-                    Text(
-                        "현재 시각",
-                        fontSize = 30.sp
-                    )
-                    CurrentTimeText()
-
-                }
-            }
-
-            Row {
-                Column(modifier = Modifier.weight(0.6f)) {
-                    Row(modifier = Modifier.padding(10.dp)) {
-                        Text(
-                            text = "이번 달 출석",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(end = 10.dp)
-                        )
-                        Text(
-                            text = "1",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        )
-                        Text(
-                            text = "회",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        )
-                        Text(
-                            text = "이번달 순위",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        )
-                        Text(
-                            text = "1",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        )
-                        Text(
-                            text = "등",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(start = 10.dp)
-                        )
-                    }
-
-                    Row(modifier = Modifier.padding(10.dp)) {
-                        Text(
-                            text = "전체 출석",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(end = 10.dp)
-                        )
-                        Text(
-                            text = "1",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        )
-                        Text(
-                            text = "회",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        )
-                        Text(
-                            text = "전체 순위",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        )
-                        Text(
-                            text = "1",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        )
-                        Text(
-                            text = "등",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(start = 10.dp)
-                        )
-                    }
-                }
-
                 Column(
-                    modifier = Modifier.weight(0.4f),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.padding(16.dp)
                 ) {
-                    Text(
-                        text = "추가 이벤트",
-                        fontSize = 30.sp,
-                    )
-                    Text(
-                        text = "출석 10회마다 커피 교환권을 드립니다.",
-                        fontSize = 15.sp
-                    )
-                    Text(
-                        text = "1/10",
-                        fontSize = 50.sp
-                    )
-                }
+                    Text("커피를 추가하겠습니까? 관계자 외 조작시, 법적 처벌을 받을 수 있습니다.", fontSize = 20.sp)
+                    Text(text = "$coffeeAmount -> ${coffeeAmount + 1}")
 
-            }
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("오늘의 출석 정보", fontSize = 30.sp)
-                Text("나중에 다시 확인 가능합니다. 주차 시간에 참고해주세요", fontSize = 20.sp)
-            }
-
-            Row {
-                Column(
-                    modifier = Modifier.weight(0.5f),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("오늘 입장 시간", fontSize = 40.sp)
-                    Text("01/28 11시 53분", fontSize = 40.sp)
-                }
-                Column(
-                    modifier = Modifier.weight(0.5f),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("골프장에 머무른 시간", fontSize = 40.sp)
-                    Text("0시간 0분", fontSize = 40.sp)
-                }
-            }
-
-            Row {
-
-                Column(
-                    modifier = Modifier.weight(0.8f),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("쿠폰함", fontSize = 30.sp)
-                    Row {
-                        Column {
-                            Lottie(rawResId = R.raw.coffee, modifier = Modifier.size(150.dp))
-                            Text("커피 교환권", fontSize = 20.sp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Button(
+                            onClick = {
+                                onDismiss()
+                            }
+                        ) {
+                            Text("취소")
                         }
-                        Text("10", fontSize = 20.sp)
-                        Text("개", fontSize = 20.sp)
 
-                        Column {
-                            Icon(
-                                painter = painterResource(id = R.drawable.baseline_golf_course_24),
-                                contentDescription = "PersonalIcon",
-                                tint = Color.Green, // Tint color for the icon
-                                modifier = Modifier.size(150.dp) // Size of the icon
-                            )
-                            Text("커피 교환권", fontSize = 20.sp)
+                        Button(
+                            onClick = {
+                                onDismiss()
+                                onConfirm(coffeeAmount)
+                            }
+                        ) {
+                            Text("확인")
                         }
-                        Text("10", fontSize = 20.sp)
-                        Text("개", fontSize = 20.sp)
                     }
-                    Text("쿠폰을 사용하시려면 직원에게 말씀해주세요.")
                 }
-
-                Button(
-                    modifier = Modifier
-                        .size(100.dp, 100.dp)
-                        .weight(0.2f)
-                        .align(Alignment.Bottom),
-                    onClick = {  }
-                ) {
-                    Text("확인")
-                }
-
             }
-
-
         }
     }
-
 }
+
+
+//@Preview(showBackground = true, widthDp = 1400, heightDp = 900)
+//@Composable
+//fun PersonalScreenPreview() {
+//
+//    Row {
+//        Column(modifier = Modifier
+//            .weight(0.3f)
+//            .fillMaxHeight()) {
+////            RankScreen()
+//            Box() {
+//
+//            }
+//        }
+//
+//        Column(
+//            modifier = Modifier
+//                .weight(0.7f)
+//                .fillMaxHeight(),
+//            verticalArrangement = Arrangement.SpaceBetween) {
+//
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth(),
+//                horizontalArrangement = Arrangement.SpaceBetween
+//            ) {
+//                Column {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.baseline_golf_course_24),
+//                        contentDescription = "PersonalIcon",
+//                        tint = Color.Green, // Tint color for the icon
+//                        modifier = Modifier.size(150.dp) // Size of the icon
+//                    )
+//                    Text(
+//                        "나의 등급",
+//                        fontSize = 30.sp
+//                    )
+//                }
+//                Column {
+//                    Row {
+//                        Text(
+//                            "이름",
+//                            fontSize = 30.sp
+//                        )
+//                        Spacer(modifier = Modifier.width(10.dp))
+//                        Text(
+//                            "1111",
+//                            fontSize = 20.sp
+//                        )
+//                    }
+//                    Button(
+//                        onClick = { }) {
+//                        Text("이름 변경")
+//                    }
+//                }
+//                Column {
+//                    Text(
+//                        "현재 시각",
+//                        fontSize = 30.sp
+//                    )
+//                    CurrentTimeText()
+//
+//                }
+//            }
+//
+//            Row {
+//                Column(modifier = Modifier.weight(0.6f)) {
+//                    Row(modifier = Modifier.padding(10.dp)) {
+//                        Text(
+//                            text = "이번 달 출석",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(end = 10.dp)
+//                        )
+//                        Text(
+//                            text = "1",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(horizontal = 10.dp)
+//                        )
+//                        Text(
+//                            text = "회",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(horizontal = 10.dp)
+//                        )
+//                        Text(
+//                            text = "이번달 순위",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(horizontal = 10.dp)
+//                        )
+//                        Text(
+//                            text = "1",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(horizontal = 10.dp)
+//                        )
+//                        Text(
+//                            text = "등",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(start = 10.dp)
+//                        )
+//                    }
+//
+//                    Row(modifier = Modifier.padding(10.dp)) {
+//                        Text(
+//                            text = "전체 출석",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(end = 10.dp)
+//                        )
+//                        Text(
+//                            text = "1",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(horizontal = 10.dp)
+//                        )
+//                        Text(
+//                            text = "회",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(horizontal = 10.dp)
+//                        )
+//                        Text(
+//                            text = "전체 순위",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(horizontal = 10.dp)
+//                        )
+//                        Text(
+//                            text = "1",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(horizontal = 10.dp)
+//                        )
+//                        Text(
+//                            text = "등",
+//                            fontSize = 30.sp,
+//                            modifier = Modifier.padding(start = 10.dp)
+//                        )
+//                    }
+//                }
+//
+//                Column(
+//                    modifier = Modifier.weight(0.4f),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    Text(
+//                        text = "추가 이벤트",
+//                        fontSize = 30.sp,
+//                    )
+//                    Text(
+//                        text = "출석 10회마다 커피 교환권을 드립니다.",
+//                        fontSize = 15.sp
+//                    )
+//                    Text(
+//                        text = "1/10",
+//                        fontSize = 50.sp
+//                    )
+//                }
+//
+//            }
+//
+//            Column(
+//                modifier = Modifier.fillMaxWidth(),
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                Text("오늘의 출석 정보", fontSize = 30.sp)
+//                Text("나중에 다시 확인 가능합니다. 주차 시간에 참고해주세요", fontSize = 20.sp)
+//            }
+//
+//            Row {
+//                Column(
+//                    modifier = Modifier.weight(0.5f),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    Text("오늘 입장 시간", fontSize = 40.sp)
+//                    Text("01/28 11시 53분", fontSize = 40.sp)
+//                }
+//                Column(
+//                    modifier = Modifier.weight(0.5f),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    Text("골프장에 머무른 시간", fontSize = 40.sp)
+//                    Text("0시간 0분", fontSize = 40.sp)
+//                }
+//            }
+//
+//            Row {
+//
+//                Column(
+//                    modifier = Modifier.weight(0.8f),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    Text("쿠폰함", fontSize = 30.sp)
+//                    Row {
+//                        Column {
+//                            Lottie(rawResId = R.raw.coffee, modifier = Modifier.size(150.dp))
+//                            Text("커피 교환권", fontSize = 20.sp)
+//                        }
+//                        Text("10", fontSize = 20.sp)
+//                        Text("개", fontSize = 20.sp)
+//
+//                        Column {
+//                            Icon(
+//                                painter = painterResource(id = R.drawable.baseline_golf_course_24),
+//                                contentDescription = "PersonalIcon",
+//                                tint = Color.Green, // Tint color for the icon
+//                                modifier = Modifier.size(150.dp) // Size of the icon
+//                            )
+//                            Text("커피 교환권", fontSize = 20.sp)
+//                        }
+//                        Text("10", fontSize = 20.sp)
+//                        Text("개", fontSize = 20.sp)
+//                    }
+//                    Text("쿠폰을 사용하시려면 직원에게 말씀해주세요.")
+//                }
+//
+//                Button(
+//                    modifier = Modifier
+//                        .size(100.dp, 100.dp)
+//                        .weight(0.2f)
+//                        .align(Alignment.Bottom),
+//                    onClick = {  }
+//                ) {
+//                    Text("확인")
+//                }
+//
+//            }
+//
+//
+//        }
+//    }
+//
+//}
